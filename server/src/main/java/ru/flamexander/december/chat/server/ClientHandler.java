@@ -12,10 +12,6 @@ public class ClientHandler {
     private DataInputStream in;
     private String username;
 
-    public String getUsername() {
-        return username;
-    }
-
     public ClientHandler(Server server, Socket socket) throws IOException {
         this.server = server;
         this.socket = socket;
@@ -33,6 +29,10 @@ public class ClientHandler {
         }).start();
     }
 
+    public String getUsername() {
+        return username;
+    }
+
     private void listenUserChatMessages() throws IOException {
         while (true) {
             String message = in.readUTF();
@@ -41,8 +41,15 @@ public class ClientHandler {
                     break;
                 }
                 if (message.startsWith("/w ")) {
-                    // TODO homework chat part 1
+                    String[] splitMessage = message.split(" ", 3);
+                    server.sendPrivateMessage(this, splitMessage[1], splitMessage[2]);
+                    continue;
                 }
+                if (message.startsWith("/kick ")) {
+                        String[] splitMessage = message.split(" ", 2);
+                        server.kickUser(splitMessage[1]);
+                    }
+
             }
             server.broadcastMessage(username + ": " + message);
         }
@@ -146,4 +153,5 @@ public class ClientHandler {
             }
         }
     }
+
 }

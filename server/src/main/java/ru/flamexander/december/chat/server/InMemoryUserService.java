@@ -9,11 +9,15 @@ public class InMemoryUserService implements UserService {
         private String login;
         private String password;
         private String username;
+        private String userRole;
 
-        public User(String login, String password, String username) {
+
+
+        public User(String login, String password, String username, String userRole) {
             this.login = login;
             this.password = password;
             this.username = username;
+            this.userRole = userRole;
         }
     }
 
@@ -21,10 +25,18 @@ public class InMemoryUserService implements UserService {
 
     public InMemoryUserService() {
         this.users = new ArrayList<>(Arrays.asList(
-                new User("login1", "pass1", "user1"),
-                new User("login2", "pass2", "user2"),
-                new User("login3", "pass3", "user3")
+                new User("admin", "admin", "admin", "admin"),
+                new User("login2", "pass2", "user2", "user"),
+                new User("login3", "pass3", "user3", "user")
         ));
+    }
+
+    @Override
+    public String getUserRole() {
+        for (User u : users) {
+            return u.userRole;
+        }
+        return null;
     }
 
     @Override
@@ -39,7 +51,7 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public void createNewUser(String login, String password, String username) {
-        users.add(new User(login, password, username));
+        users.add(new User(login, password, username, "user"));
     }
 
     @Override
