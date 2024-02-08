@@ -50,7 +50,7 @@ public class Server {
     }
 
     public synchronized void unsubscribe(ClientHandler clientHandler) {
-        clients.remove(clientHandler.getUsername(), clientHandler);
+        clients.remove(clientHandler.getUsername());
         System.out.println("Отключился клиент " + clientHandler.getUsername());
     }
 
@@ -72,15 +72,18 @@ public class Server {
         return false;
     }
 
-    public void kickUser(String userName) throws IOException {
-        if (this.getUserService().getUserRole().equals("admin")) {
+    public void kickUser(String userRole, String userName) {
+        String key = null;
+        if (userRole.equals("admin")) {
             for (Map.Entry<String, ClientHandler> entry : clients.entrySet()) {
                 if (entry.getKey().equals(userName)) {
-                    entry.getValue().disconnect();
+                    key = entry.getKey();
                 }
             }
+            clients.get(key).disconnect();
+        } else {
+            clients.get(key).sendMessage("недостаточно прав");
         }
-        System.out.println("недостаточно прав");
     }
 }
 

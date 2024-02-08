@@ -31,10 +31,12 @@ public class InMemoryUserService implements UserService {
         ));
     }
 
-    @Override
-    public String getUserRole() {
+
+    public String getUserRoleFromMemory(String login){
         for (User u : users) {
-            return u.userRole;
+            if (u.login.equals(login)) {
+                return u.userRole;
+            }
         }
         return null;
     }

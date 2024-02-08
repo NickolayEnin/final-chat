@@ -19,8 +19,9 @@ public class ClientHandler {
         this.out = new DataOutputStream(socket.getOutputStream());
         new Thread(() -> {
             try {
-                authentication();
-                listenUserChatMessages();
+                String login = authentication();
+                listenUserChatMessages(login);
+
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -33,7 +34,7 @@ public class ClientHandler {
         return username;
     }
 
-    private void listenUserChatMessages() throws IOException {
+    private void listenUserChatMessages(String login) throws IOException {
         while (true) {
             String message = in.readUTF();
             if (message.startsWith("/")) {
@@ -46,9 +47,10 @@ public class ClientHandler {
                     continue;
                 }
                 if (message.startsWith("/kick ")) {
-                        String[] splitMessage = message.split(" ", 2);
-                        server.kickUser(splitMessage[1]);
-                    }
+                    String[] splitMessage = message.split(" ", 2);
+                    server.kickUser(server.getUserService().getUserRoleFromMemory(login), splitMessage[1]);
+                    continue;
+                }
 
             }
             server.broadcastMessage(username + ": " + message);
@@ -137,9 +139,12 @@ public class ClientHandler {
         return true;
     }
 
-    private void authentication() throws IOException {
+    private String authentication() throws IOException {
         while (true) {
             String message = in.readUTF();
+            String[] elements = message.split(" ");
+            String login = elements[1];
+            String password = elements[2];
             boolean isSucceed = false;
             if (message.startsWith("/auth ")) {
                 isSucceed = tryToAuthenticate(message);
@@ -149,7 +154,7 @@ public class ClientHandler {
                 sendMessage("СЕРВЕР: требуется войти в учетную запись или зарегистрироваться");
             }
             if (isSucceed) {
-                break;
+                return login;
             }
         }
     }
