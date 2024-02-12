@@ -72,18 +72,16 @@ public class Server {
         return false;
     }
 
-    public void kickUser(String userRole, String userName) {
-        String key = null;
+    public void kickUser(ClientHandler clientHandler, String userRole, String userName) {
         if (userRole.equals("admin")) {
-            for (Map.Entry<String, ClientHandler> entry : clients.entrySet()) {
-                if (entry.getKey().equals(userName)) {
-                    key = entry.getKey();
-                }
+            if (clients.containsKey(userName)) {
+                clients.get(userName).disconnect();
             }
-            clients.get(key).disconnect();
+            else {
+                clientHandler.sendMessage("такого пользователя не существует");
+            }
         } else {
-            clients.get(key).sendMessage("недостаточно прав");
+            clientHandler.sendMessage("недостаточно прав");
         }
     }
 }
-

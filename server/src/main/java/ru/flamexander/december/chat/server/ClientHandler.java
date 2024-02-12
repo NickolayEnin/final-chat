@@ -48,7 +48,7 @@ public class ClientHandler {
                 }
                 if (message.startsWith("/kick ")) {
                     String[] splitMessage = message.split(" ", 2);
-                    server.kickUser(server.getUserService().getUserRoleFromMemory(login), splitMessage[1]);
+                    server.kickUser(this,server.getUserService().getUserRoleFromMemory(login), splitMessage[1]);
                     continue;
                 }
 
