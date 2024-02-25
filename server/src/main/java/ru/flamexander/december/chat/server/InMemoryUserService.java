@@ -20,18 +20,6 @@ public class InMemoryUserService implements UserService {
             this.password = password;
             this.username = username;
             this.userRole = userRole;
-
-        }
-
-
-        @Override
-        public String toString() {
-            return "User{" +
-                    "login='" + login + '\'' +
-                    ", password='" + password + '\'' +
-                    ", username='" + username + '\'' +
-                    ", userRole='" + userRole + '\'' +
-                    '}';
         }
     }
 
@@ -40,9 +28,6 @@ public class InMemoryUserService implements UserService {
 
     public InMemoryUserService() {
         this.users = connection.getUser();
-
-
-
     }
 
 
