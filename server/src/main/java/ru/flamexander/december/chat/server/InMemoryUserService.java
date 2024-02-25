@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class InMemoryUserService implements UserService {
-    class User {
+    private DataBaseConnection connection = new DataBaseConnection();
+    static class User {
+
         private String login;
         private String password;
         private String username;
@@ -18,17 +20,29 @@ public class InMemoryUserService implements UserService {
             this.password = password;
             this.username = username;
             this.userRole = userRole;
+
+        }
+
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "login='" + login + '\'' +
+                    ", password='" + password + '\'' +
+                    ", username='" + username + '\'' +
+                    ", userRole='" + userRole + '\'' +
+                    '}';
         }
     }
 
     private List<User> users;
 
+
     public InMemoryUserService() {
-        this.users = new ArrayList<>(Arrays.asList(
-                new User("admin", "admin", "admin", "admin"),
-                new User("login2", "pass2", "user2", "user"),
-                new User("login3", "pass3", "user3", "user")
-        ));
+        this.users = connection.getUser();
+
+
+
     }
 
 
